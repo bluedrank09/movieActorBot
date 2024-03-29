@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 from dotenv import load_dotenv
 import os
+import httpx
 
 st.title('lol')
 name = st.text_input('Name of actor or movie :')
@@ -24,6 +25,12 @@ def main():
         # printing
         print(f"{GOOGLE_API_KEY=}")
         print(f"{GOOGLE_SEARCH_ENGINE_ID=}")
+
+        #getting response json - same parameters as postman
+        params = {'q' : 'benedict cumberbatch', 'key' : GOOGLE_API_KEY, 'cx' : GOOGLE_SEARCH_ENGINE_ID, 'num' : 3}
+        response = httpx.get('https://www.googleapis.com/customsearch/v1', params = params)
+        print(response.json())
+
     except Exception as error:
         raise error
 
