@@ -76,7 +76,10 @@ if submit:
         prompt = PromptTemplate.from_template("""Question: is {name} a movie or an actor? reply y for movie, n for actor""") # creating question for openai
         llm = OpenAI(openai_api_key=OPENAI_API_KEY)
         llm_chain = LLMChain(prompt=prompt, llm=llm) # asking openai the question
-        print(llm_chain.invoke(name))
+        # print(f"{llm_chain.invoke(name)}---------!!!")
+        llm_response = llm_chain.invoke(name)
+        type_flag = llm_response['text'][-1]
+        print(f" THE FLAG IS {type_flag} -----!")
 
         # initialisng link vairables
         link_wikipedia = ""
