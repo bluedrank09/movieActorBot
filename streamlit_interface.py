@@ -25,61 +25,76 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # streamlit widgetss
 st.title("Movies and Actors 'Google'")
 
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = {1:False,2:False}
+
+def clicked(button):
+    st.session_state.clicked[button] = True
+
 name = st.text_input('Name of actor or movie', placeholder="Type here...")
-
-moviesColumn, emptyThree, actorColumn = st.columns(3)
-with moviesColumn:
-    movieOptions = st.radio("***Movies***", ["General Info", "Cast and Crew", "Reviews"], captions = ["a", "b", "c"])
-with emptyThree:    
-    st.write("")
-with actorColumn:
-    actorOptions = st.radio("***Actors***", ["Biography", "Movies", "Filmography"], captions = ["d", "e", "f"])
-    st.write("")
-
 with st.container(): # to align submit button
     emptyOne, submitButton, emptyTwo = st.columns(3)
     with emptyOne:
         st.write("")
     with submitButton:
-        submit = st.button('Submit')
+        submit = st.button('Submit', on_click=clicked, args=[1])
     with emptyTwo:
         st.write("")
+            
+# making the varibales in .env os variables
+load_dotenv()
+# making then program variables
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+GOOGLE_SEARCH_ENGINE_ID = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
-if submit:
+#display_ask_flag = False
+
+#print(f" display ask button flag is {display_ask_flag}")
+if st.session_state.clicked[1]:
     if name == "": # checking if there is no name inputted
         st.error('Please input a name', icon="🚨")
         #print("No input from user. Please input a name")
     else:
-        if movieOptions == 'General Info':
-            query_string = name + " general info"
-        elif movieOptions == 'Cast and Crew':
-            query_string = name + " cast and crew"
-        elif movieOptions == 'Reviews':
-            query_string = name + " reviews"
-        elif actorOptions == 'Biography':
-            query_string = name + " biography"
-        elif actorOptions == 'Movies':
-            query_string = name + " movies"
-        elif actorOptions == 'Filmography':
-            query_string = name + " filmography"
-        else:
-            st.error('Please select an option', icon="🚨") # in case the user doesn't choose a radio option 
-
-    #try: # try except finally for error handling
-        # making the varibales in .env os variables
-        load_dotenv()
-        # making then program variables
-        GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
-        GOOGLE_SEARCH_ENGINE_ID = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
-        OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-
-        prompt = PromptTemplate.from_template("""Question: is {name} a movie or an actor? reply y for movie, n for actor""") # creating question for openai
+        prompt = PromptTemplate.from_template("""Question: is {name} a movie or an actor? answer with 'y' if it is a movie, 'n' if it is an actor, 'x' if it is neither""") # creating question for openai
         llm = OpenAI(openai_api_key=OPENAI_API_KEY)
         llm_chain = LLMChain(prompt=prompt, llm=llm) # asking openai the question
         # print(f"{llm_chain.invoke(name)}---------!!!")
         llm_response = llm_chain.invoke(name)
         type_flag = llm_response['text'][-1]
-        print(f" THE FLAG IS {type_flag} -----!")
+        print(f" THE FLAG IS {type_flag}, text is {llm_response}")
+
+        moviesColumn, emptyThree, actorColumn = st.columns(3)
+        if type_flag == 'y':
+            with moviesColumn:
+                movieOptions = st.radio("***Movies***", ["General Info", "Cast and Crew", "Reviews"], captions = ["a", "b", "c"])
+            with emptyThree:    
+                st.write("")
+        elif type_flag == 'n':
+            with actorColumn:
+                actorOptions = st.radio("***Actors***", ["Biography", "Movies", "Filmography"], captions = ["d", "e", "f"])
+                st.write("")
+   
+        ask_button = st.button('Ask', on_click=clicked, args=[2]) # ask bytton for the name AND radio option        
+
+    if st.session_state.clicked[2]:
+        #print(f"actors {actorOptions}")
+        if type_flag == 'y':
+            if movieOptions == 'General Info':
+                query_string = name + " general info"
+            elif movieOptions == 'Cast and Crew':
+                query_string = name + " cast and crew"
+            elif movieOptions == 'Reviews':
+                query_string = name + " reviews"
+        elif type_flag == 'n':
+            if actorOptions == 'Biography':
+                query_string = name + " biography"
+            elif actorOptions == 'Movies':
+                query_string = name + " movies"
+            elif actorOptions == 'Filmography':
+                query_string = name + " filmography"
+        else:
+            st.error('Please select an option', icon="🚨") # in case the user doesn't choose a radio option 
 
         # initialisng link vairables
         link_wikipedia = ""
@@ -122,6 +137,8 @@ if submit:
 
         with st.expander("Rotten Tomatoes"): # expander for rotten tomatoes
             st.page_link(link_rotten_tomatoes, label="Rotten Tomatoes", icon="🌎") # st widget that displays link
-        
+
+    else:
+        st.write("Button not pressed")    
     # response.json is an object. It is made of dictionaries and lists. response.json() is a list, item is the index
 
