@@ -10,22 +10,21 @@ from langchain.chains.llm import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import OpenAI # to make the call to openai
 
-st.set_page_config(page_title="Movies and Actors 'Google'")
+st.set_page_config(page_title="Movies and Actors 'Google'") # name of tab
 
 # hiding the "deploy", "rerun", "rerun always" options from the top right of the screen
-hide_streamlit_style = """
-    <style>
+hide_streamlit_style = """ 
+    <style> 
         #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
+        footer {visibility: hidden;} 
         header {visibility: hidden;}
     </style>
 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
-# streamlit widgetss
-st.title("Movies and Actors 'Google'")
+st.title("Movies and Actors 'Google'") # title of page
 
-if 'clicked' not in st.session_state:
+if 'clicked' not in st.session_state: # setting both buttons to False - not clicked
     st.session_state.clicked = {1:False,2:False}
 
 def clicked(button):
@@ -42,7 +41,7 @@ with st.container(): # to align submit button
         st.write("")
             
 # making the varibales in .env os variables
-load_dotenv()
+load_dotenv() 
 # making then program variables
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 GOOGLE_SEARCH_ENGINE_ID = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
@@ -55,16 +54,16 @@ if st.session_state.clicked[1]:
     if name == "": # checking if there is no name inputted
         st.error('Please input a name', icon="🚨")
         #print("No input from user. Please input a name")
-    else:
+    else: # checking if the user inputted the name of an actor or a movie
         prompt = PromptTemplate.from_template("""Question: is {name} a movie or an actor? answer with 'y' if it is a movie, 'n' if it is an actor, 'x' if it is neither""") # creating question for openai
-        llm = OpenAI(openai_api_key=OPENAI_API_KEY)
-        llm_chain = LLMChain(prompt=prompt, llm=llm) # asking openai the question
+        llm = OpenAI(openai_api_key=OPENAI_API_KEY) # getting the api key to talk to OpenAI
+        llm_chain = LLMChain(prompt=prompt, llm=llm) # asking OpenAI the question
         # print(f"{llm_chain.invoke(name)}---------!!!")
-        llm_response = llm_chain.invoke(name)
+        llm_response = llm_chain.invoke(name) # getting response from OpenAI
         type_flag = llm_response['text'][-1]
         print(f" THE FLAG IS {type_flag}, text is {llm_response}")
 
-        moviesColumn, emptyThree, actorColumn = st.columns(3)
+        moviesColumn, emptyThree, actorColumn = st.columns(3) # creating columns to align 
         if type_flag == 'y':
             with moviesColumn:
                 movieOptions = st.radio("***Movies***", ["General Info", "Cast and Crew", "Reviews"], captions = ["a", "b", "c"])
@@ -74,8 +73,13 @@ if st.session_state.clicked[1]:
             with actorColumn:
                 actorOptions = st.radio("***Actors***", ["Biography", "Movies", "Filmography"], captions = ["d", "e", "f"])
                 st.write("")
-   
-        ask_button = st.button('Ask', on_click=clicked, args=[2]) # ask bytton for the name AND radio option        
+        empty_four, ask_button_column, emptyFive = st.columns(3)
+        with empty_four:
+            st.write("")
+        with ask_button_column:
+            ask_button = st.button('Ask', on_click=clicked, args=[2]) # ask button for the name AND radio option        
+        with emptyFive:
+            st.write("")
 
     if st.session_state.clicked[2]:
         #print(f"actors {actorOptions}")
