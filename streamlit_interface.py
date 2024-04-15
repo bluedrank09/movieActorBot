@@ -27,11 +27,11 @@ def main():
         
         if 'clicked' not in st.session_state: # setting both buttons to False - not clicked
             st.session_state.clicked = {1:False,2:False}
-        print(f"-------------!!!-----{st.session_state.clicked} st session state")
+        # print(f"-------------!!!-----{st.session_state.clicked} st session state")
 
         def clicked(button):
             st.session_state.clicked[button] = True
-            print(f"-------------!!!-----{st.session_state.clicked} st session state AFTER CLICKING BUTTON")
+            # print(f"-------------!!!-----{st.session_state.clicked} st session state AFTER CLICKING BUTTON")
 
         name = st.text_input('Name of actor or movie', placeholder="Type here...")
 
@@ -58,12 +58,12 @@ def main():
                 moviesColumn, emptyThree, actorColumn = st.columns(3) # creating columns to align 
                 if type_flag == 'y':
                     with moviesColumn:
-                        movieOptions = st.radio("***Movies***", ["General Info", "Cast and Crew", "Reviews"], captions = ["a", "b", "c"])
+                        movieOptions = st.radio("***Movies***", ["General Info", "Cast and Crew", "Reviews"], captions = ["The synopsis and fun facts of the movie", "Actors and crew on the movie", "Reviews and ratings of the film"])
                     with emptyThree:    
                         st.write("")
                 elif type_flag == 'n':
                     with actorColumn:
-                        actorOptions = st.radio("***Actors***", ["Biography", "Movies", "Filmography"], captions = ["d", "e", "f"])
+                        actorOptions = st.radio("***Actors***", ["Biography", "Awards", "Filmography"], captions = ["About them and their life", "Awards and accomplishments they've won", "Movies and TV shows they're in"])
                         st.write("")
 
                 empty_four, ask_button_column, empty_five = st.columns(3)
@@ -75,7 +75,7 @@ def main():
                     st.write("")
 
             if st.session_state.clicked[2]:
-                st.session_state.clicked = {1:False,2:True}
+                # st.session_state.clicked = {1:False,2:True}
                 if type_flag == 'y': # options if the user inputted 
                     if movieOptions == 'General Info':
                         query_string = name + " general info"
@@ -86,8 +86,8 @@ def main():
                 elif type_flag == 'n':
                     if actorOptions == 'Biography':
                         query_string = name + " biography"
-                    elif actorOptions == 'Movies':
-                        query_string = name + " movies"
+                    elif actorOptions == 'Awards':
+                        query_string = name + " awards"
                     elif actorOptions == 'Filmography':
                         query_string = name + " filmography"
 
@@ -120,7 +120,7 @@ def main():
                     st.page_link(link_rotten_tomatoes, label="Rotten Tomatoes", icon="🌎") # st widget that displays link
 
                 st.session_state.clicked = {1:False,2:False} # so that when user runs program again, they can strat from the real beginning
-                print(f"-------------!!!-----{st.session_state.clicked} after all buttons cliced program finished")
+                # print(f"-------------!!!-----{st.session_state.clicked} after all buttons cliced program finished")
                 # response.json is an object. It is made of dictionaries and lists. response.json() is a list, item is the index
     except Exception as error:
         raise error

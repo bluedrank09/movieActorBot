@@ -15,7 +15,8 @@ def check_movie_actor(log, name):
         llm_chain = LLMChain(prompt=prompt, llm=llm) # asking OpenAI the question
         log.info(f"{llm_chain.invoke(name)}---------!!!")
         llm_response = llm_chain.invoke(name) # getting response from OpenAI
-        type_flag = llm_response['text'].strip()[-1]
+        filter_llm_response = filter(str.isalpha, llm_response['text'])
+        type_flag = "".join(filter_llm_response)
         log.info(f" THE FLAG IS {type_flag}, text is {llm_response}")
         return(type_flag)
     except Exception as error:
