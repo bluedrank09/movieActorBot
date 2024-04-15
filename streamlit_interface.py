@@ -34,6 +34,7 @@ def main():
             # print(f"-------------!!!-----{st.session_state.clicked} st session state AFTER CLICKING BUTTON")
 
         name = st.text_input('Name of actor or movie', placeholder="Type here...")
+        st.write("*Note : To ask another question, please reload the tab*")
 
         with st.container(): # to align submit button
             empty_one, submitButton, empty_two = st.columns(3)
