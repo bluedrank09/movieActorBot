@@ -30,7 +30,7 @@ def main():
             st.session_state.clicked = {1:False,2:False}
 
         def clicked(button): # setting what clicked means - the program will know to execture 'True' code when button is clicked
-            st.session_state.clicked[button] = True
+            st.session_state.clicked[button] = True 
 
         name = st.text_input('Name of actor or movie', placeholder="Type here...") # inut area for user to type name
         st.write("*Note : To ask another question, please reload the tab*") # note for if they want to ask multiple questions

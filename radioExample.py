@@ -2,9 +2,10 @@ import streamlit as st
 
 moviesColumn, emptyThree, actorColumn = st.columns(3)
 with moviesColumn:
-    movieOptions = st.radio("***Movies***", ["General Info", "Cast and Crew", "Reviews"], captions = ["The movie synposis and ideas", "Who acted and helped in the film", "Opinions and ratings of the movie"])
+    movie_options = st.radio("***Movies***", ["General Info", "Cast and Crew", "Reviews"], captions = ["The synopsis and fun facts of the movie", "Actors and crew on the movie", "Reviews and ratings of the film"])
 with emptyThree:    
     st.write("")
 with actorColumn:
-    actorOptions = st.radio("***Actors***", ["Biography", "Box Office", "Filmography"], captions = ["Basic information about them", "How well they've done in the box office", "Movies and TV shows they have acted in"])
-    st.write("")
+    actor_options = st.radio("***Actors***", ["Biography", "Awards", "Filmography"], captions = ["About them and their life", "Awards and accomplishments they've won", "Movies and TV shows they're in"])
+
+st.text_input('Name of actor or movie', placeholder="Type here...")
