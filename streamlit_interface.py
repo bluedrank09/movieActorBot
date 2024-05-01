@@ -2,7 +2,7 @@
 import streamlit as st # streamlit is the package that handles the actual GUI
 import logging # for logger to replace print statements 
 from openai_api import check_movie_actor # importing function to check movie or actor from other file
-from google_api import get_links
+from google_api import get_links # importing function to get links from json from other file
 import time
 import math # for the progess bar
 
@@ -54,6 +54,8 @@ def main():
                     # y means movie, n means actor
                     type_flag = check_movie_actor(log, name) # using method from openai_api.py
                     time.sleep(1)
+                    if type_flag == 'x':
+                        st.error("Please input the name of a movie or actor", icon="🚨")
 
                 # setting radio options
                 movies_column, empty_three, actor_column = st.columns(3) # creating columns to align 

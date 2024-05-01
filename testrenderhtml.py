@@ -18,4 +18,4 @@ wb.open_new('https://www.imdb.com/title/tt2906216/')
 # HtmlFile = open("test.html", 'r', encoding='utf-8')
 # source_code = HtmlFile.read() 
 # print(source_code)
-# components.html(source_code)
+# components.html(source_code
